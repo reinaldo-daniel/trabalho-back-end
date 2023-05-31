@@ -4,7 +4,7 @@ const user = require("./domain/users/routes");
 const auth = require("./middleware/auth");
 const { 
     login,
-    registerUser
+    registerUser,
 } = require("./domain/users/controllers")
 
 const app = express();

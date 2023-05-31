@@ -3,7 +3,6 @@ const stringError = require("../../helpers/errors/stringZodError");
 const emailError = require("../../helpers/errors/emailZodError");
 
 const loginUserSchema = z.object({
-    name: z.string(stringError),
     email: z.string(stringError)
         .email(emailError),
     password: z.string(stringError),

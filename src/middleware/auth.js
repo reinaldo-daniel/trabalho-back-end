@@ -19,10 +19,6 @@ async function validAuth(request, response, next) {
             }
         })
 
-        console.log('====================================');
-        console.log(verifyStatusUser);
-        console.log('====================================');
-
         if(!verifyStatusUser) {
             return response.status(401)
                 .json({

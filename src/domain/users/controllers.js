@@ -14,7 +14,7 @@ async function login(request, response, next) {
         const {
             email,
             password,
-        } = request.body;
+        } = loginUserSchema.parse(request.body);
 
         const user = await prisma.user.findFirst({
             where: {
@@ -51,6 +51,13 @@ async function login(request, response, next) {
                 token,
             })
     } catch(error) {
+        if(error instanceof z.ZodError) {
+            return response.status(422)
+                .json({
+                    message: error.errors
+                });
+        }
+
         next(error);
     }
 }
@@ -120,6 +127,8 @@ async function updateUser(request, response, next) {
             status,
         } = updateUserSchema.parse(body);
 
+        const hashPassword = bcrypt.hashSync(password, 10)
+
         const userUpdate = await prisma.user.update({
             where: {
                 id: Number(userId)
@@ -127,7 +136,7 @@ async function updateUser(request, response, next) {
             data: {
                 name: name,
                 email: email,
-                password: password,
+                password: hashPassword,
                 status: status,
             }
         })
@@ -138,6 +147,13 @@ async function updateUser(request, response, next) {
                 userUpdate,
             })
     } catch(error) {
+        if (error instanceof z.ZodError) {
+            return response.status(422)
+                .json({
+                    message: error.errors
+                });
+        }
+
         next(error);
     }
 }

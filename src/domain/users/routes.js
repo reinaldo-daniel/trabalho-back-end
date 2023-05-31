@@ -3,8 +3,8 @@ const {
     updateUser,
 } = require("./controllers");
 
-const route = Router();
+const router = Router();
 
-route.put("/", updateUser)
+router.put("/", updateUser)
 
-module.exports = route;
+module.exports = router;
