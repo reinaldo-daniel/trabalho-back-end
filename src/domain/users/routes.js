@@ -5,6 +5,6 @@ const {
 
 const router = Router();
 
-router.put("/", updateUser)
+router.put("/", updateUser);
 
 module.exports = router;

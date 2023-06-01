@@ -27,7 +27,7 @@ async function validAuth(request, response, next) {
                 })
         }
 
-        request.userId = payload;
+        request.userId = Number(payload);
 
         next();
     } catch(error) {

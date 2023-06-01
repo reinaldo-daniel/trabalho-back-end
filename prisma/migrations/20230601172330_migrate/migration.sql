@@ -2,10 +2,10 @@
 CREATE TABLE `Recipe` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(191) NOT NULL,
+    `description` VARCHAR(191) NOT NULL,
     `preparation_time` VARCHAR(191) NOT NULL,
     `userId` INTEGER NOT NULL,
 
-    UNIQUE INDEX `Recipe_userId_key`(`userId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 

@@ -120,12 +120,33 @@ async function updateUser(request, response, next) {
             body, 
         } = request;
 
+        const user = await prisma.user.findFirst({
+            where: {
+                id: userId,
+            }
+        })
+
         const {
             name,
             email,
-            password,
+            currentPassword,
+            newPassword,
             status,
         } = updateUserSchema.parse(body);
+
+        const validPassword = bcrypt.compareSync(currentPassword, user.password);
+
+        if(!validPassword){
+            return response.status(401)
+                .json({
+                    code: 401,
+                    message: "Invalid current password.",
+                })
+        }
+
+        const password = newPassword 
+            ? newPassword 
+            : currentPassword;
 
         const hashPassword = bcrypt.hashSync(password, 10)
 
@@ -140,6 +161,8 @@ async function updateUser(request, response, next) {
                 status: status,
             }
         })
+
+        delete userUpdate.password;
 
         response.status(200)
             .json({
