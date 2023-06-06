@@ -5,7 +5,13 @@ const {
 
 async function listRecipes(request, response, next) {
     try {
-
+        const recipes = await prisma.recipe.findMany();
+        
+        response.status(200)
+            .json({
+                code: 200,
+                recipes
+            })
     } catch(error) {
         next(error);
     }
@@ -45,8 +51,13 @@ async function registerRecipe(request, response, next) {
                 description: description,
                 preparation_time: preparationTime,
                 userId: userId,
+            },
+            include: {
+                user: true
             }
         })
+
+        delete recipe.user.password;
 
         response.status(200)
             .json({
@@ -94,13 +105,39 @@ async function updateRecipe(request, response, next) {
                 })
         }
 
+        const varifyRecipeExist = await prisma.recipe.findFirst({
+            where: {
+                name,
+                userId,
+                NOT: {
+                    id
+                }
+            }
+        })
+
+        if(varifyRecipeExist) {
+            return response.status(409)
+                .json({
+                    code: 409,
+                    message: "Recipe already registered.",
+                })
+        }
+
         const recipeUpdate = await prisma.recipe.update({
             data: {
                 name,
                 description,
-                preparationTime,
+                preparation_time: preparationTime,
             },
+            where: {
+                id
+            },
+            include: {
+                user: true
+            }
         })
+
+        delete recipeUpdate.user.password;
 
         response.status(200)
             .json({

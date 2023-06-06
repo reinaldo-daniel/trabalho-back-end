@@ -7,6 +7,7 @@ const {
     login,
     registerUser,
 } = require("./domain/users/controllers")
+const { listRecipes } = require("./domain/recipes/controllers");
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.use(express.json());
 
 app.use("/login", login);
 app.use("/register", registerUser);
+app.use("/recipes", listRecipes);
 
 app.use("/user", auth, user);
 app.use("/recipe", auth, recipe);
