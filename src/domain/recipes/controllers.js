@@ -149,8 +149,63 @@ async function updateRecipe(request, response, next) {
     }
 }
 
+async function deleteRecipe(request, response, next) {
+    try {
+        const {
+            userId,
+            params,
+        } = request;
+
+        const { recipeId } = params;
+
+        const id = Number(recipeId);
+
+        const recipe = await prisma.recipe.findFirst({
+            where: {
+                id,
+                userId,
+            },
+            include: {
+                user: true
+            }
+        })
+
+        if(!recipe) {
+            return response.status(404)
+                .json({
+                    code: 404,
+                    message: "Not found."
+                })
+        }
+
+        const recipeDelete = await prisma.recipe.deleteMany({
+            where: {
+                id,
+                userId
+            },
+        })
+
+        if(!recipeDelete) {
+            return response.status(404)
+                .json({
+                    code: 404,
+                    message: "Not found."
+                })
+        }
+
+        response.status(200)
+            .json({
+                code: 200,
+                message: "sucess"
+            })
+    } catch(error) {
+        next(error);
+    }
+}
+
 module.exports = {
     registerRecipe,
     updateRecipe,
-    listRecipes
+    listRecipes,
+    deleteRecipe
 }
