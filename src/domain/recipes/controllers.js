@@ -3,9 +3,15 @@ const {
     recipeCreateSchema,
 } = require("./validators");
 
-async function listRecipes(request, response, next) {
+async function listUserRecipes(request, response, next) {
     try {
-        const recipes = await prisma.recipe.findMany();
+        const { userId } = request;
+
+        const recipes = await prisma.recipe.findMany({
+            where: {
+                userId: userId
+            }
+        });
         
         response.status(200)
             .json({
@@ -206,6 +212,6 @@ async function deleteRecipe(request, response, next) {
 module.exports = {
     registerRecipe,
     updateRecipe,
-    listRecipes,
+    listUserRecipes,
     deleteRecipe
 }
